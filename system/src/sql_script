@@ -1,0 +1,190 @@
+DROP DATABASE IF EXISTS newsagency_data_baseSQL;
+CREATE DATABASE IF NOT EXISTS newsagency_data_baseSQL;
+USE newsagency_data_baseSQL;
+
+
+/* Customer TABLE*/
+SELECT 'CREATING CUSTOMWER TABLE' as 'INFO';
+
+DROP TABLE IF EXISTS customer;
+
+CREATE TABLE customer (
+	customer_id INTEGER AUTO_INCREMENT ,
+	firstName VARCHAR(15) NOT NULL,
+	surname VARCHAR(20) NOT NULL,
+	phone_number VARCHAR (15) NOT NULL,
+	age VARCHAR (3) NOT NULL,
+	town VARCHAR(20) NOT NULL,
+	address VARCHAR(40) NOT NULL,
+	area VARCHAR(20) NOT NULL,
+
+	PRIMARY KEY(customer_id) );
+
+SELECT 'INSERTING DATA INTO TABLE CUSTOMER' as 'INFO';
+
+INSERT INTO customer VALUES ( null, 'Joe', 'Mullins','087795565', '45', 'Athlone', 'Church street 17', 'South');
+INSERT INTO customer VALUES ( null, 'Derek', 'Smith','12545445985','23', 'Balinasloe', 'Apartment 6 Pearse street', 'West');
+INSERT INTO customer VALUES ( null, 'Carol', 'Long', '2545484', '32','Moate','Abbey street 8', 'North');
+INSERT INTO customer VALUES ( null, 'Mike', 'Adams','255544545', '19', 'Mullingar', 'Main road 9', 'East');
+INSERT INTO customer VALUES ( null, 'Maura', 'Jones','12145454', '27', 'Ballymahon', 'Sesam street 67', 'South');
+INSERT INTO customer VALUES ( null, 'Treasa', 'Cummins','2114545','34', 'Tullamore', 'Rocky road 34','West');
+
+SELECT 'CHECKING TO SEE IF DATA INSERTED TO customer CORRECTLY' as 'INFO';
+
+SELECT * FROM customer;
+
+/* PUBLICATION TABLE*/
+CREATE TABLE publication (
+	publication_id INTEGER AUTO_INCREMENT ,
+	publication_name VARCHAR(30) NOT NULL,
+	publication_price VARCHAR(20) NOT NULL,
+	publication_frequency VARCHAR(20) NOT NULL,
+	PRIMARY KEY(publication_id) );
+
+SELECT 'INSERTING DATA INTO TABLE publication ' as 'INFO';
+
+INSERT INTO publication  VALUES ( null, 'Westmeath Independant', 5, 2);
+INSERT INTO publication  VALUES ( null, 'Athlone Advertiser',1, 2);
+INSERT INTO publication  VALUES ( null, 'The Irish Times',2, 2);
+INSERT INTO publication  VALUES ( null, 'Westmeath Independant ',5, 1);
+INSERT INTO publication  VALUES ( null, 'Irish Independant', 3, 1);
+INSERT INTO publication  VALUES ( null, 'Westmeath Independant',5, 1);
+
+SELECT 'CHECKING TO SEE IF DATA INSERTED TO PUBLICATION CORRECTLY' as 'INFO';
+
+SELECT * FROM publication;
+
+/* Subscribes table*/
+CREATE TABLE subscribes (
+	customer_id INTEGER NOT NULL ,
+	publication_id INTEGER NOT NULL,
+	PRIMARY KEY(customer_id, publication_id),
+	FOREIGN KEY(publication_id) REFERENCES publication  (publication_id),
+	FOREIGN KEY (customer_id) REFERENCES customer (customer_id));
+
+SELECT 'INSERTING DATA INTO SUBSCRIBES' as 'INFO';
+
+INSERT INTO subscribes VALUES (1, 2);
+INSERT INTO subscribes VALUES (2, 5);
+INSERT INTO subscribes VALUES (3, 2);
+INSERT INTO subscribes VALUES (4, 5);
+INSERT INTO subscribes VALUES (5, 6);
+INSERT INTO subscribes VALUES (6, 5);
+
+SELECT 'CHECKING TO SEE IF DATA INSERTED TO SUBSCRIBES CORRECTLY' as 'INFO';
+
+SELECT * FROM subscribes;
+
+
+
+/*INVOICE TABLE*/
+SELECT 'CREATING INVOICE TABLE' as 'INFO';
+
+DROP TABLE IF EXISTS invoice;
+
+CREATE TABLE invoice (
+
+	bill_id INTEGER AUTO_INCREMENT ,
+	customer_id INTEGER,
+	price INTEGER(10) NOT NULL,
+	publication_id INTEGER,
+	payment_type VARCHAR(150) NOT NULL,
+
+	PRIMARY KEY(bill_id),
+	FOREIGN KEY (customer_id) REFERENCES customer (customer_id));
+
+SELECT 'INSERTING DATA INTO TABLE invoice' as 'INFO';
+
+INSERT INTO invoice VALUES ( null,2, 11.00,1, 'card');
+INSERT INTO invoice VALUES ( null,3, 2.00, 2, 'cash');
+INSERT INTO invoice VALUES ( null,1, 26.23, 3, 'cash');
+INSERT INTO invoice VALUES ( null,4, 15.00, 4, 'cash');
+INSERT INTO invoice VALUES ( null,5, 4.99, 5, 'cash');
+
+SELECT 'CHECKING TO SEE IF DATA INSERTED TO INVOICE CORRECTLY' as 'INFO';
+
+SELECT * FROM invoice;
+
+
+
+/* DELIVERY TABLE*/
+
+CREATE TABLE delivery(
+	delivery_id INTEGER AUTO_INCREMENT,
+	delivery_customerAddress VARCHAR(50) NOT NULL,
+	delivery_products VARCHAR(50) NOT NULL,
+	delivery_time VARCHAR(20) NOT NULL,
+	delivery_order VARCHAR(10) NOT NULL,
+	PRIMARY KEY (delivery_id));
+
+SELECT 'INSERTING DATA INTO TABLE delivery ' as 'INFO';
+
+INSERT INTO delivery  VALUES ( null, 'N37 K2T6', 'Westmeath Independant', '2pm', '3km');
+INSERT INTO delivery  VALUES ( null, 'N37 H7L9','Athlone Advertiser', '10am', '2km');
+INSERT INTO delivery  VALUES ( null, 'N37 Y2C4','The Irish Times', '11am', '4km');
+
+
+CREATE TABLE stock (
+	stock_id INTEGER NOT NULL,
+    	available_stock VARCHAR(50) NOT NULL,
+    	/*available_magazine VARCHAR(20) NOT NULL,*/
+    	PRIMARY KEY(stock_id));
+    	/*FOREIGN KEY(publication_id) REFERENCES publication  (publication_id),
+    	FOREIGN KEY (customer_id) REFERENCES customer (customer_id));*/
+
+    SELECT 'INSERTING DATA INTO STOCK' as 'INFO';
+
+    INSERT INTO stock VALUES (1, 'Westmeath Independant');
+    INSERT INTO stock VALUES (2, 'Westmeath News');
+    INSERT INTO stock VALUES (3, 'Mullingar Independant');
+    INSERT INTO stock VALUES (4, 'Moate Local News');
+    INSERT INTO stock VALUES (5, 'Ballinasloe Journal');
+    INSERT INTO stock VALUES (6, 'Westmeath Magazine');
+
+/*SELECT 'CHECKING TO SEE IF DATA INSERTED TO RECEIVES CORRECTLY' as 'INFO';*/
+
+
+/* ADMIN table*/
+CREATE TABLE admin (
+  admin_id INTEGER AUTO_INCREMENT,
+  adminName VARCHAR(20) NOT NULL,
+  adminPassword VARCHAR(20) NOT NULL,
+  adminEmail VARCHAR(150) NOT NULL,
+  adminPhoneNumber VARCHAR (15) NOT NULL,
+  adminFirstname VARCHAR(250) NOT NULL,
+  adminSurname VARCHAR(250) NOT NULL,
+  adminLevel enum('admin','user') NOT NULL ,
+  PRIMARY KEY(admin_id),
+  UNIQUE KEY user (adminName));
+SELECT 'INSERTING DATA INTO TABLE ADMIN' as 'INFO';
+INSERT INTO admin VALUES (null, 'david', 'david','a00270351@student.ait.ie','123565656', 'David', 'Akinsade', 'user');
+INSERT INTO admin VALUES (null, 'andris', 'andris', 'a00129244@student.ait.ie', '123565656', 'Andris', 'Orna' ,'admin');
+INSERT INTO admin VALUES (null, 'adam', 'adam', 'a00269578@student.ait.ie', '123565656', 'Adam', 'Sheriff', 'user');
+INSERT INTO admin VALUES (null, 'wu', 'wu', 'a00268870@student.ait.ie', '123565656', 'Jiahao',  'Wu' ,'user');
+
+select * from admin;
+
+
+/* SELECT TABLES TO CHECK IT*/
+SELECT * FROM invoice;
+
+select * from customer;
+
+select * from publication ;
+
+select * from subscribes;
+
+select * from stock;
+
+select * from admin;
+
+
+/*Find all customers registered on a system*/
+
+select customer.customer_id, surname, firstName
+from customer, receives, publication
+where customer.customer_id = receives.customer_id
+	and publication .publication_id = receives.publication_id
+	and publication .publication_id = 5;
+
+
